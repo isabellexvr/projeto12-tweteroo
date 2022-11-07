@@ -18,7 +18,6 @@ app.post("/sign-up", (req, res) => {
 
   users.push(newUser);
   res.send("OK");
-  console.log(users);
 });
 
 app.post("/tweets", (req, res) => {
@@ -42,22 +41,33 @@ app.post("/tweets", (req, res) => {
     }
   });
   res.status(201).send("OK");
-  console.log(newTweet);
 });
 
 app.get("/tweets", (req, res) => {
   const { page } = req.query;
-  if (page) {
-    if (page > 1 && completeTweets.length >= 10) {
-      const tweetsNumber = completeTweets.slice(
-        (page - 1) * 10,
-        completeTweets.length
-      );
-      res.send(tweetsNumber);
-    }
-    res.send(completeTweets.slice(-10));
-  } else {
+
+  if (page < 1) {
     res.status(400).send("Informe uma página válida!");
+    return;
+  }
+
+  if (page > 1 && completeTweets.length >= 10) {
+    const lastNine = completeTweets.slice(
+      (page - 1) * 10 + 1,
+      completeTweets.length
+    );
+    console.log((page - 1) * 10 + 1);
+    res.send(lastNine);
+    return;
+  }
+
+  if (page > 1 && completeTweets.length < 10) {
+    return;
+  }
+
+  if (page == 1) {
+    res.send(completeTweets.slice(-10));
+    return;
   }
 });
 
