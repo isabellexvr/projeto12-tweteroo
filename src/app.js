@@ -15,7 +15,6 @@ app.post("/sign-up", (req, res) => {
     res.status(400).send("Todos os campos são obrigatórios!");
     return;
   }
-
   users.push(newUser);
   res.send("OK");
 });
@@ -29,7 +28,6 @@ app.post("/tweets", (req, res) => {
     return;
   }
   tweets.push(newTweet);
-
   users.forEach((u) => {
     if (user === u.username) {
       const newCompleteTweet = {
@@ -45,12 +43,10 @@ app.post("/tweets", (req, res) => {
 
 app.get("/tweets", (req, res) => {
   const { page } = req.query;
-
   if (page < 1) {
     res.status(400).send("Informe uma página válida!");
     return;
   }
-
   if (page > 1 && completeTweets.length >= 10) {
     const lastNine = completeTweets.slice(
       (page - 1) * 10 + 1,
@@ -60,11 +56,9 @@ app.get("/tweets", (req, res) => {
     res.send(lastNine);
     return;
   }
-
   if (page > 1 && completeTweets.length < 10) {
     return;
   }
-
   if (page == 1) {
     res.send(completeTweets.slice(-10));
     return;
