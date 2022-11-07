@@ -46,9 +46,19 @@ app.post("/tweets", (req, res) => {
 });
 
 app.get("/tweets", (req, res) => {
-  const tenLast = completeTweets.slice(-10);
-  res.send(tenLast);
-  console.log(tenLast);
+  const { page } = req.query;
+  if (page) {
+    if (page > 1 && completeTweets.length >= 10) {
+      const tweetsNumber = completeTweets.slice(
+        (page - 1) * 10,
+        completeTweets.length
+      );
+      res.send(tweetsNumber);
+    }
+    res.send(completeTweets.slice(-10));
+  } else {
+    res.status(400).send("Informe uma página válida!");
+  }
 });
 
 app.get("/tweets/:username", (req, res) => {
