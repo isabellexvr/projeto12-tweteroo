@@ -23,7 +23,8 @@ app.post("/sign-up", (req, res) => {
 
 app.post("/tweets", (req, res) => {
   const newTweet = req.body;
-  console.log(newTweet);
+  const user = req.headers.user;
+
   if (!newTweet.tweet) {
     res.status(400).send("Todos os campos são obrigatórios!");
     return;
@@ -31,7 +32,7 @@ app.post("/tweets", (req, res) => {
   tweets.push(newTweet);
 
   users.forEach((u) => {
-    if (newTweet.username === u.username) {
+    if (user === u.username) {
       const newCompleteTweet = {
         username: u.username,
         avatar: u.avatar,
@@ -48,6 +49,16 @@ app.get("/tweets", (req, res) => {
   const tenLast = completeTweets.slice(-10);
   res.send(tenLast);
   console.log(tenLast);
+});
+
+app.get("/tweets/:username", (req, res) => {
+  const user = req.params.username;
+  const userTweets = completeTweets.filter((t) => {
+    if (user === t.username) {
+      return t;
+    }
+  });
+  res.send(userTweets);
 });
 
 app.listen(5000, () => {
